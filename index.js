@@ -11,7 +11,9 @@ module.exports = function createRedis (opts) {
   const clientP = {}
 
   asyncCommands.forEach(f => {
-    clientP[f] = promisify(client[f]).bind(client)
+    if (client[f]) {
+      clientP[f] = promisify(client[f]).bind(client)
+    }
   })
   syncCommands.forEach(f => {
     clientP[f] = client[f].bind(client)
