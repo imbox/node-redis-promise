@@ -7,7 +7,12 @@ const syncCommands = ['end']
 const asyncCommands = commands.filter(c => !commandsToSkip.includes(c))
 
 module.exports = function createRedis (opts) {
-  const client = redis.createClient(opts)
+  let client
+  if (typeof opts.hget === 'function') {
+    client = opts
+  } else {
+    client = redis.createClient(opts)
+  }
   const clientP = {}
 
   asyncCommands.forEach(f => {
